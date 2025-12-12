@@ -1,11 +1,15 @@
 package controller;
 
 import model.Conta;
+import dto.DepositoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ContaService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 //Controller: Ser a porta de entrada da API REST. Aqui ele recebe requisições HTTP e devolve respostas HTTP.
@@ -33,11 +37,28 @@ public class ContaController {
     
     }
 
+    @PostMapping("/{id}/deposito")
+    public ResponseEntity<?> depositar(@PathVariable Long id,@RequestBody DepositoRequest request) {
+        try{
+        service.depositar(id,request.getValor());
+        
+        return ResponseEntity.ok("OK! Depósito realizado com sucesso!");
+
+        } catch (IllegalArgumentException e){
+            
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }catch (RuntimeException e){
+            
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+    }
+
     @GetMapping("/{id}/saldo")
     public ResponseEntity<?> consultarSaldo(@PathVariable Long id){
         try{
             Double saldo = service.consultarSaldo(id);
-            return ResponseEntity.ok(saldo);
+            return ResponseEntity.status(HttpStatus.OK).body(saldo);
         }catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } 
@@ -47,7 +68,7 @@ public class ContaController {
     public ResponseEntity<?> apagarConta(@PathVariable Long id){
         try{
             service.apagar(id);
-            return ResponseEntity.ok("Conta apagada com sucesso!");
+            return ResponseEntity.status(HttpStatus.OK).body(apagarConta(id));
         } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
