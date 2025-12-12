@@ -1,7 +1,10 @@
 package service;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import model.Conta;
 import repository.ContaRepository;
@@ -15,6 +18,21 @@ public class ContaService {
     @Autowired
     private ContaRepository repository;
 
+    @Transactional
+    public void depositar (Long id,Double valor){
+        if (valor <= 0){
+            throw new IllegalArgumentException("ERRO! O valor do depósito deve ser positivo!");
+        }
+    
+
+    Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("Conta não encontrada"));
+    
+    Double SaldoAtual = conta.getSaldo();
+
+    conta.setSaldo(SaldoAtual + valor);
+
+    repository.save(conta);
+    }
 
     public Conta criar(Conta conta){
         if (conta.getCpf() == null) {
