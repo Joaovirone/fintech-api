@@ -1,7 +1,8 @@
 package org.bank.fintech.service;
 
-import org.bank.fintech.model.Conta;
+import org.bank.fintech.model.*;
 import org.bank.fintech.repository.ContaRepository;
+import org.bank.fintech.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContaService {
     @Autowired
     private ContaRepository repository;
+
+    @Autowired
+    private TransacaoRepository transacaoRepository;
 
     @Transactional
     public void depositar (Long id,Double valor){
@@ -29,6 +33,10 @@ public class ContaService {
     conta.setSaldo(SaldoAtual + valor);
 
     repository.save(conta);
+
+    Transacao historico = new Transacao(valor, TipoTransacao.DEPOSITO, conta);
+    
+    transacaoRepository.save(historico);
     }
 
     public Conta sacar(Long id, Double valor){
@@ -103,5 +111,7 @@ public class ContaService {
 
         repository.save(origem);
         repository.save(destino);
+    
     }
+
 }
