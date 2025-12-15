@@ -78,4 +78,30 @@ public class ContaService {
         }
 
     }
+
+    @Transactional
+    public void transferir(Long idOrigem, Long idDestino, Double valor){
+        
+        if (valor <= 0){
+            throw new IllegalArgumentException("ERRO! O valor do saque deve ser positivo!");
+        }
+
+        if (idOrigem.equals(idDestino)){
+            throw new IllegalArgumentException("ERRO! Conta de Origem e Destinão não podem ser iguais!");
+        }
+
+        Conta origem = repository.findById(idOrigem).orElseThrow(()-> new RuntimeException("Conta de Origem não encontrada!"));
+
+        Conta destino = repository.findById(idDestino).orElseThrow(() -> new RuntimeException("Conta de Destino não encontrada!"));
+
+        if (origem.getSaldo() < valor){
+            throw new IllegalArgumentException("ERRO! Saldo insuficiente para transferência!");
+        }
+
+        origem.setSaldo(origem.getSaldo() - valor);
+        destino.setSaldo(destino.getSaldo() + valor);
+
+        repository.save(origem);
+        repository.save(destino);
+    }
 }
