@@ -16,7 +16,7 @@ public class TransferenciaRequest {
     }
 
 
-    public Long getIDestino(){
+    public Long getIdDestino(){
         return idDestino;
     }
 
