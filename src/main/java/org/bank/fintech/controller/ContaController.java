@@ -1,6 +1,9 @@
 package org.bank.fintech.controller;
 
+import io.swagger.v3.oas.annotations.tags.*;
+import io.swagger.v3.oas.annotations.Operation.*;
 import org.bank.fintech.dto.DepositoRequest;
+import org.bank.fintech.dto.ExtratoResponse;
 import org.bank.fintech.dto.SaqueRequest;
 import org.bank.fintech.dto.TransferenciaRequest;
 import org.bank.fintech.model.Conta;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 
 
@@ -25,12 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/contas")
+@Tag(name = "Gestão de contas bancárias!", description = "Endpoints para criação, movimentação e consultas de contas bancárias!")
 public class ContaController {
     @Autowired
     private ContaService service;
 
 
     @PostMapping
+    @Operation(summary="Criar nova conta", description="Cria uma conta com saldo inicial zerado. Requer CPF único.")
     public ResponseEntity<?> criarConta(@RequestBody Conta conta){
         try{
             Conta novaConta = service.criar(conta);
@@ -45,6 +52,7 @@ public class ContaController {
     }
 
     @PostMapping("/{id}/deposito")
+    @Operation(summary="Realiza depósito", description="Adiciona valor positivo ao saldo da conta informada.")
     public ResponseEntity<?> depositar(@PathVariable Long id,@RequestBody DepositoRequest request) {
         try{
         service.depositar(id,request.getValor());
@@ -62,6 +70,7 @@ public class ContaController {
     }
 
     @PostMapping("/{id}/saque")
+    @Operation(summary="Realiza saque", description="Debita valor do saldo, se houve fundos suficientes.")
     public ResponseEntity<?> sacar(@PathVariable Long id, @RequestBody SaqueRequest request) {
         
         try{
@@ -78,8 +87,22 @@ public class ContaController {
        
     }
     
+    @GetMapping("/{id}/extrato")
+    @Operation(summary="Consulta o extrato", description="Retorna os dados da conta, saldo atual e lista de transações (saques/depósitos)")
+    public ResponseEntity<?> coinsultarExtrato(@PathVariable Long id){
+        try{
+            ExtratoResponse extrato = service.consultarExtrato(id);
+
+            return ResponseEntity.ok(extrato);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/{id}/saldo")
+    @Operation(summary="Consulta o saldo", description="Retorna apenas o valor número do saldo atual.")
     public ResponseEntity<?> consultarSaldo(@PathVariable Long id){
         try{
             Double saldo = service.consultarSaldo(id);
@@ -91,6 +114,7 @@ public class ContaController {
     }
 
     @PostMapping("/transferir")
+    @Operation(summary="Realiza as transferências", description="Transfere valores entre duas contas existentes. Operação atômica")
     public ResponseEntity<?> transferir(@RequestBody TransferenciaRequest request){
         try{
             service.transferir(request.getIdOrigem(), request.getIdDestino(), request.getValor());
@@ -101,18 +125,6 @@ public class ContaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e){
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-    
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> apagarConta(@PathVariable Long id){
-        try{
-            service.apagar(id);
-            return ResponseEntity.status(HttpStatus.OK).body(apagarConta(id));
-
-        } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
