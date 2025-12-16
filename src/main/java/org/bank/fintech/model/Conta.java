@@ -2,6 +2,7 @@ package org.bank.fintech.model;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +23,11 @@ public class Conta{
     private String titular;
     private Date dataDeNascimento;
     private String cpf;
+
+    @Column(nullable=false)
+    private Boolean ativo = true;
+
+    
 
     public Conta(){}
 
@@ -55,5 +61,12 @@ public class Conta{
     }
     public void setCpf(String cpf){
         this.cpf = cpf;
+    }
+    public Boolean getAtivo(){
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo){
+        this.ativo = ativo;
     }
 }
