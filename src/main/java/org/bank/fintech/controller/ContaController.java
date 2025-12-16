@@ -1,7 +1,6 @@
 package org.bank.fintech.controller;
 
-import io.swagger.v3.oas.annotations.tags.*;
-import io.swagger.v3.oas.annotations.Operation.*;
+import org.bank.fintech.dto.AtualizacaoContaRequest;
 import org.bank.fintech.dto.DepositoRequest;
 import org.bank.fintech.dto.ExtratoResponse;
 import org.bank.fintech.dto.SaqueRequest;
@@ -20,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -38,105 +42,77 @@ public class ContaController {
 
     @PostMapping
     @Operation(summary="Criar nova conta", description="Cria uma conta com saldo inicial zerado. Requer CPF único.")
-    public ResponseEntity<?> criarConta(@RequestBody Conta conta){
-        try{
+    public ResponseEntity<?> criarConta(@RequestBody @Valid Conta conta){
+        
             Conta novaConta = service.criar(conta);
-
             return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
 
-        } catch (IllegalArgumentException e){
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    
     }
 
     @PostMapping("/{id}/deposito")
     @Operation(summary="Realiza depósito", description="Adiciona valor positivo ao saldo da conta informada.")
-    public ResponseEntity<?> depositar(@PathVariable Long id,@RequestBody DepositoRequest request) {
-        try{
-        service.depositar(id,request.getValor());
+    public ResponseEntity<?> depositar(@PathVariable Long id,@RequestBody @Valid DepositoRequest request) {
         
+        service.depositar(id,request.getValor());
         return ResponseEntity.ok("OK! Depósito realizado com sucesso!");
 
-        } catch (IllegalArgumentException e){
-            
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        }catch (RuntimeException e){
-            
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-    }
+    
 
     @PostMapping("/{id}/saque")
     @Operation(summary="Realiza saque", description="Debita valor do saldo, se houve fundos suficientes.")
-    public ResponseEntity<?> sacar(@PathVariable Long id, @RequestBody SaqueRequest request) {
+    public ResponseEntity<?> sacar(@PathVariable Long id, @RequestBody @Valid SaqueRequest request) {
         
-        try{
             service.sacar(id, request.getValor());
             return ResponseEntity.ok("Saque realizado com Sucesso!");
-
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-
-        } catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+       
     }
 
     @PostMapping("/transferir")
     @Operation(summary="Realiza as transferências", description="Transfere valores entre duas contas existentes. Operação atômica")
-    public ResponseEntity<?> transferir(@RequestBody TransferenciaRequest request){
-        try{
+    public ResponseEntity<?> transferir(@RequestBody @Valid TransferenciaRequest request){
+
             service.transferir(request.getIdOrigem(), request.getIdDestino(), request.getValor());
-
             return ResponseEntity.ok("Transferência realizada com sucesso!");
-        } catch (IllegalArgumentException e ){
-
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (RuntimeException e){
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        
         }
-    }
+    
     
     @GetMapping("/{id}/extrato")
     @Operation(summary="Consulta o extrato", description="Retorna os dados da conta, saldo atual e lista de transações (saques/depósitos)")
     public ResponseEntity<?> coinsultarExtrato(@PathVariable Long id){
-        try{
+        
             ExtratoResponse extrato = service.consultarExtrato(id);
-
             return ResponseEntity.ok(extrato);
 
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        
         }
-    }
+    
 
     @GetMapping("/{id}/saldo")
     @Operation(summary="Consulta o saldo", description="Retorna apenas o valor número do saldo atual.")
     public ResponseEntity<?> consultarSaldo(@PathVariable Long id){
-        try{
+        
             Double saldo = service.consultarSaldo(id);
             return ResponseEntity.status(HttpStatus.OK).body(saldo);
 
-        }catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } 
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary="Atualizar dados", description="Atualiza nome do titular. Não altera saldo")
+    public ResponseEntity<?> atualizarConta(@PathVariable Long id, @RequestBody @Valid AtualizacaoContaRequest request) {
+        
+        Conta contaAtualizada = service.atualizar(id, request.getTitular());
+        return ResponseEntity.ok(contaAtualizada);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Encerrar conta", description="Desativa a conta (Soft Delete). O histórico é mantido.")
     public ResponseEntity<?> encerrarConta (@PathVariable Long id){
 
-        try{
             service.encerrar(id);
             return ResponseEntity.ok("Conta encerrada com sucesso!");
-        } catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+       
     }
-    }
-
+    
+}
