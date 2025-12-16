@@ -22,11 +22,7 @@ public class ContaService {
 
     @Transactional
     public void depositar (Long id,Double valor){
-        if (valor <= 0){
-            throw new IllegalArgumentException("ERRO! O valor do depósito deve ser positivo!");
-        }
     
-
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada"));
 
         if(conta.getAtivo() == false){
@@ -46,9 +42,7 @@ public class ContaService {
 
     @Transactional
     public void sacar(Long id, Double valor){
-        if (valor <= 0){
-            throw new IllegalArgumentException("ERRO! O valor do saque deve ser positivo!");
-        }
+
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada"));
 
         if(conta.getAtivo() == false){
@@ -112,9 +106,6 @@ public class ContaService {
     @Transactional
     public void transferir(Long idOrigem, Long idDestino, Double valor){
         
-        if (valor <= 0){
-            throw new IllegalArgumentException("ERRO! O valor do saque deve ser positivo!");
-        }
 
         if (idOrigem.equals(idDestino)){
             throw new IllegalArgumentException("ERRO! Conta de Origem e Destinão não podem ser iguais!");
@@ -157,6 +148,16 @@ public class ContaService {
         conta.setAtivo(false);
 
         repository.save(conta);
+    }
+
+    public Conta atualizar(Long id, String novoTitular){
+        Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada."));
+
+        if(novoTitular != null && !novoTitular.isBlank()){
+            conta.setTitular(novoTitular);
+        }
+        
+        return repository.save(conta);
     }
 
 }
