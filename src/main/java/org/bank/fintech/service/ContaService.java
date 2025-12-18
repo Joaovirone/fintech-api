@@ -10,7 +10,8 @@ import org.bank.fintech.repository.ContaRepository;
 import org.bank.fintech.repository.TransacaoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.extern.slf4j.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 //Service: o Coração do Sistema, aqui a gente valida, calcula e aplica as regras de negócio.
 //O Service não sabe o que é HTTP (WEB) e não sabe gerar SQL.
@@ -63,10 +64,12 @@ public class ContaService {
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada"));
 
         if(conta.getAtivo() == false){
+            log.warn("Método de SAQUE não foi realizado devida a CONTA ID |{}| estar inativa", id);
             throw new IllegalArgumentException("ERRO! Conta inativa! Operação não realizada!");
         }
         
         if (conta.getSaldo() < valor){
+            log.warn("Conta ID: {} não possui saldo {} para essa operação", id, valor);
             throw new IllegalArgumentException("ERRO! Saldo insuficiente para realizar saque!");
         }
         Double SaldoAtual = conta.getSaldo();
@@ -97,9 +100,9 @@ public class ContaService {
         
     }
 
-    public Conta criar(Conta conta){
+    public Conta criar(Conta conta, Double valorInicial){
 
-        log.info("Iniciando método de CRIAÇÃO DE CONTA.");
+        log.info("Iniciando método de CRIAÇÃO DE CONTA para novo CPF: {}", conta.getCpf());
 
         if (conta.getCpf() == null) {
             throw new IllegalArgumentException("ERRO! CPF obrigatório para criar conta bancária!");
@@ -109,13 +112,33 @@ public class ContaService {
         conta.setCpf(cpfLimpo);
 
         if (repository.existsByCpf(cpfLimpo)){
+            log.warn("Tentativa de criar conta com CPF duplicado: {}", cpfLimpo);
             throw new IllegalArgumentException(("ERRO! CPF já está em Uso!"));
+            
+        }
+
+        
+
+        conta.setId(null);
+        conta.setSaldo(0.0);
+        conta.setAtivo(true);
+
+        Conta contaSalva = repository.save(conta);
+
+        if (valorInicial != null && valorInicial > 0 ){
+
+            Transacao historico = new Transacao(valorInicial, TipoTransacao.DEPOSITO, contaSalva);
+
+            transacaoRepository.save(historico);
+
+            contaSalva.setSaldo(valorInicial);
+
+            repository.save(contaSalva);
         }
 
         log.info("Método de CRIAÇÃO DE CONTA realizado com sucesso.");
 
-        conta.setSaldo(0.0);
-        return repository.save(conta);
+        return contaSalva;
 
         
     }
@@ -139,6 +162,7 @@ public class ContaService {
             repository.deleteById(id);
         }
         else{
+            log.warn("Não foi possível completar a operação pois a conta ID: {} não foi encontrada", id);
             throw new RuntimeException("ERRO! Não é possível apagar. Conta não encontrada");
         }
         log.info("Método de APAGAR CONTA foi realizado com sucesso na conta ID: {}",id);
@@ -151,6 +175,7 @@ public class ContaService {
         
 
         if (idOrigem.equals(idDestino)){
+            log.warn("Método de TRANSFERÊNCIA não realizado pois os IDs de origem |{}| e destino |{}| não podem ser iguais.");
             throw new IllegalArgumentException("ERRO! Conta de Origem e Destinão não podem ser iguais!");
         }
 
@@ -158,13 +183,16 @@ public class ContaService {
         Conta destino = repository.findById(idDestino).orElseThrow(() -> new RuntimeException("ERRO! Conta de Destino não encontrada!"));
 
         if(origem.getAtivo() == false){
+            log.warn("Método de TRANSFERÊNCIA não relizado devido a Conta ID ORIGEM |{}| estar inativa.", idOrigem);
             throw new IllegalArgumentException("ERRO! Conta inativa! Operação não realizada!");
         }
         if(destino.getAtivo() == false){
+            log.warn("Método de TRANSFERÊNCIA não relizado devido a Conta ID DESTINO |{}| estar inativa.", idDestino);
             throw new IllegalArgumentException("ERRO! Conta inativa! Operação não realizada!");
         }
 
         if (origem.getSaldo() < valor){
+            log.warn("Método de TRANSFERÊNCIA não relizado devido a saldo ser insuficiente R${} .", valor);
             throw new IllegalArgumentException("ERRO! Saldo insuficiente para transferência!");
         }
 
