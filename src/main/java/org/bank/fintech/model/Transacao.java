@@ -2,6 +2,8 @@ package org.bank.fintech.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,10 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Transacao {
     @Id
@@ -29,6 +35,7 @@ public class Transacao {
     
     @ManyToOne
     @JoinColumn(name = "conta_id")
+    @JsonIgnore
     private Conta conta;
 
     public Transacao(Double valor, TipoTransacao tipo, Conta conta){
