@@ -10,8 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +31,6 @@ public class Transacao {
     @JoinColumn(name = "conta_id")
     private Conta conta;
 
-    public Transacao() {}
-
     public Transacao(Double valor, TipoTransacao tipo, Conta conta){
         this.valor = valor;
         this.tipo = tipo;
@@ -36,23 +38,4 @@ public class Transacao {
         this.dataHora = LocalDateTime.now();
     }
 
-    public Long getId(){
-        return id;
-    }
-    
-    public Double getValor(){
-        return valor;
-    }
-    
-    public LocalDateTime getDataHora(){
-        return dataHora;
-    }
-    
-    public TipoTransacao getTipo(){
-        return tipo;
-    }
-    
-    public Conta getConta(){
-        return conta;
-    }
 }
