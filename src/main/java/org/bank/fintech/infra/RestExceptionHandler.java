@@ -10,27 +10,28 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler{
+public class RestExceptionHandler{
     
-
-    private ResponseEntity<String> tratarErroRegraDeNegocio(IllegalArgumentException exception){
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> tratarErroRegraDeNegocio(IllegalArgumentException exception){
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    private ResponseEntity<String> tratarErroRuntime(RuntimeException exception){
+    public ResponseEntity<String> tratarErroRuntime(RuntimeException exception){
         
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> tratarErrosValidacao(MethodArgumentNotValidException ex){
 
-        Map<String, String> erros = new HashMap();
+        Map<String, String> erros = new HashMap<>();
 
 
         ex.getBindingResult().getAllErrors().forEach((error)-> {
