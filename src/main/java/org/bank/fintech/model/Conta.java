@@ -1,8 +1,8 @@
 package org.bank.fintech.model;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,10 +46,10 @@ public class Conta{
     @Column(nullable=false, unique=true)
     private String cpf;
 
-    @Column(nullable=false)
+    @Column(nullable=false, columnDefinition="boolean default true")
     private Boolean ativo = true;
 
-    @OneToMany(mappedBy="conta", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy="conta")
     private List<Transacao> transacao;
 
     
