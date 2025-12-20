@@ -40,10 +40,10 @@ public class Usuario implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities(){
         if("admin".equals(this.role)){ 
             
-            return List.of(new SimpleGrantedAuthority("role_admin"), new SimpleGrantedAuthority("role_user"));
+            return List.of(new SimpleGrantedAuthority("ROLE_admin"), new SimpleGrantedAuthority("ROLE_user"));
         
         }else {
-            return List.of(new SimpleGrantedAuthority("role_user"));
+            return List.of(new SimpleGrantedAuthority("ROLE_user"));
         }
     }
 
