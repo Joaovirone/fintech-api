@@ -2,12 +2,16 @@ package org.bank.fintech.service;
 
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
+import org.bank.fintech.model.Usuario;
 import org.bank.fintech.dto.ExtratoResponse;
 import org.bank.fintech.model.Conta;
 import org.bank.fintech.model.TipoTransacao;
 import org.bank.fintech.model.Transacao;
 import org.bank.fintech.repository.ContaRepository;
 import org.bank.fintech.repository.TransacaoRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,6 +121,7 @@ public class ContaService {
             
         }
 
+        conta.setUsuario(getUsuarioLogado());
         
 
         conta.setId(null);
@@ -148,6 +153,8 @@ public class ContaService {
         log.info("Iniciando método de CONSULTAR SALDO na conta ID: {}",id);
 
         Conta conta = repository.findById(id).orElseThrow(() -> new RuntimeException("ERRO! Conta não encontrada!"));
+
+        validarDonoDaConta(conta);
 
         log.info("Método de CONSULTAR SALDO foi realizado com sucesso na conta ID: {}",id);
         return conta.getSaldo();
@@ -237,4 +244,21 @@ public class ContaService {
         
     }
 
+    private Usuario getUsuarioLogado(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return (Usuario) authentication.getPrincipal(); 
+    }
+
+    private void validarDonoDaConta(Conta conta){
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        if (usuarioLogado.getRole().equals("admin")) {
+            return;
+        }
+
+        if (!conta.getUsuario().getId().equals(usuarioLogado.getId())) {
+            throw new RuntimeException("ACESSO NEGADO: Você não tem permissão para acessar essa conta."); 
+        }
+    }
 }
