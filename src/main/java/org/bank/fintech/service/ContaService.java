@@ -6,7 +6,7 @@ import javax.management.RuntimeErrorException;
 
 import org.bank.fintech.model.Usuario;
 import org.bank.fintech.dto.ExtratoResponse;
-import org.bank.fintech.infra.RecursoNaoEncontradoException;
+import org.bank.fintech.infra.exception.RecursoNaoEncontradoException;
 import org.bank.fintech.model.Conta;
 import org.bank.fintech.model.TipoTransacao;
 import org.bank.fintech.model.Transacao;
