@@ -1,6 +1,7 @@
 package org.bank.fintech.controller;
 
 import org.bank.fintech.dto.AtualizacaoContaRequest;
+import org.bank.fintech.dto.CriarContaRequest;
 import org.bank.fintech.dto.DepositoRequest;
 import org.bank.fintech.dto.ExtratoResponse;
 import org.bank.fintech.dto.SaqueRequest;
@@ -44,12 +45,20 @@ public class ContaController {
 
     @PostMapping
     @Operation(summary="Criar nova conta", description="Cria uma conta com saldo inicial zerado. Requer CPF único.")
-    public ResponseEntity<?> criarConta(@RequestBody @Valid Conta conta){
+    public ResponseEntity<?> criarConta(@RequestBody @Valid CriarContaRequest dados){
 
             
         
-            Conta novaConta = service.criar(conta, 0.0);
+            Conta novaConta = new Conta();
+            novaConta.setTitular(dados.getTitular());
+            novaConta.setCpf(dados.getCpf());
+            novaConta.setDataDeNascimento(dados.getDataDeNascimento());
+
+            Conta contaCriada = service.criar(novaConta,dados.getValorInicial());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
+
+
 
     }
 
