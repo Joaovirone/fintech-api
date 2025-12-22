@@ -1,5 +1,6 @@
 package org.bank.fintech.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -24,7 +25,7 @@ public class CriarContaRequest {
     private String cpf;
 
     @NotNull (message = "A data de nascimento é obrigatória.")
-    private LocalDateTime dataDeNascimento;
+    private LocalDate dataNascimento;
 
     private Double valorInicial = 0.0;
     
