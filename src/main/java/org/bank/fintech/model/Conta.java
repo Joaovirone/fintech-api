@@ -1,5 +1,7 @@
 package org.bank.fintech.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class Conta{
     private double saldo;
 
     @Column(nullable=false)
-    private Date dataDeNascimento;
+    private LocalDate dataNascimento;
 
     @NotBlank(message="O nome do titular é obrigatório.")
     @Column(nullable=false, unique=true)
