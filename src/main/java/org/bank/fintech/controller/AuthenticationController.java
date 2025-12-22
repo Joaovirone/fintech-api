@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.Data;
-import lombok.var;
+
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +37,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity <?> login(@RequestBody @Valid AuthenticationDTO data) {
         
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.getLogin(), data.getSenha());
         
         var auth = authenticationManager.authenticate(usernamePassword);
 
@@ -50,11 +50,11 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity <?> register(@RequestBody RegisterDTO data) {
         
-        if (repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if (repository.findByLogin(data.getLogin()) != null) return ResponseEntity.badRequest().build();
         
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.getSenha());
 
-        Usuario newUSer = new Usuario(null, data.login(), encryptedPassword, data.role());
+        Usuario newUSer = new Usuario(null, data.getLogin(), encryptedPassword, data.getRole());
         
         repository.save(newUSer);
 
