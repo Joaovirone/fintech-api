@@ -76,6 +76,9 @@ public class ContaService {
             log.warn("Conta ID: {} não possui saldo {} para essa operação", id, valor);
             throw new IllegalArgumentException("ERRO! Saldo insuficiente para realizar saque!");
         }
+
+        validarDonoDaConta(conta);
+
         Double SaldoAtual = conta.getSaldo();
 
         conta.setSaldo(SaldoAtual - valor);
@@ -94,6 +97,8 @@ public class ContaService {
         log.info("Iniciando método de CONSULTAR EXTRATO na conta ID: {}", id);
 
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada!"));
+
+        validarDonoDaConta(conta);
 
         List<Transacao> transacoes = transacaoRepository.findByContaId(id);
 
@@ -161,6 +166,7 @@ public class ContaService {
         
     }
 
+    /*
     public void apagar(Long id) {
 
         log.info("Iniciando método de APAGAR CONTA na conta ID: {}",id);
@@ -172,8 +178,12 @@ public class ContaService {
             log.warn("Não foi possível completar a operação pois a conta ID: {} não foi encontrada", id);
             throw new RuntimeException("ERRO! Não é possível apagar. Conta não encontrada");
         }
+
+        
+
         log.info("Método de APAGAR CONTA foi realizado com sucesso na conta ID: {}",id);
     }
+        */
 
     @Transactional
     public void transferir(Long idOrigem, Long idDestino, Double valor){
@@ -188,6 +198,8 @@ public class ContaService {
 
         Conta origem = repository.findById(idOrigem).orElseThrow(()-> new RuntimeException("ERRO! Conta de Origem não encontrada!"));
         Conta destino = repository.findById(idDestino).orElseThrow(() -> new RuntimeException("ERRO! Conta de Destino não encontrada!"));
+
+        validarDonoDaConta(origem);
 
         if(origem.getAtivo() == false){
             log.warn("Método de TRANSFERÊNCIA não relizado devido a Conta ID ORIGEM |{}| estar inativa.", idOrigem);
@@ -223,6 +235,8 @@ public class ContaService {
         log.info("Iniciando método de ENCERRAR na conta ID: {}", id);
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada!"));
 
+        validarDonoDaConta(conta);
+
         conta.setAtivo(false);
         repository.save(conta);
         log.info("Método de ENCERRAR foi realizado com sucesso na conta ID: {}", id);
@@ -233,6 +247,8 @@ public class ContaService {
         log.info("Iniciando método de ATUALIZAR CONTA na conta ID: {}", id);
 
         Conta conta = repository.findById(id).orElseThrow(()-> new RuntimeException("ERRO! Conta não encontrada."));
+
+        validarDonoDaConta(conta);
 
         if(novoTitular != null && !novoTitular.isBlank()){
             conta.setTitular(novoTitular);
