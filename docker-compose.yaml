@@ -1,0 +1,31 @@
+services:
+  # Serviço do Banco de Dados
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: fintech-postgres
+    environment:
+      - POSTGRES_DB=fintech_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Serviço da sua Aplicação Java
+  api-fintech:
+    build: .  # Constrói usando o Dockerfile da pasta atual
+    container_name: fintech-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db # Espera o banco iniciar
+    environment:
+      # Sobrescreve as configurações do application.properties para rodar no Docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/fintech_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate 
+
+volumes:
+  postgres_data:
