@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -110,6 +112,14 @@ public class ContaController {
             return ResponseEntity.status(HttpStatus.OK).body(saldo);
 
     }
+    @GetMapping
+    public ResponseEntity<List<Conta>> listarContas() {
+
+        List<Conta> contas = service.listarTodas();
+
+        return ResponseEntity.ok(contas);
+    }
+    
 
     @PutMapping("/{id}")
     @Operation(summary="Atualizar dados", description="Atualiza nome do titular. Não altera saldo")
