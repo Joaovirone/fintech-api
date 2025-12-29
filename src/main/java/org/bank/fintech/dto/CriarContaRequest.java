@@ -25,7 +25,7 @@ public class CriarContaRequest {
     private String cpf;
 
     @NotNull (message = "A data de nascimento é obrigatória.")
-    private LocalDate dataNascimento;
+    private LocalDate dataDeNascimento;
 
     private Double valorInicial = 0.0;
     
