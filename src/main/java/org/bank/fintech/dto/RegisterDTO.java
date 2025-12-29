@@ -1,4 +1,5 @@
 package org.bank.fintech.dto;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class RegisterDTO {
-    String login;
-    String senha;
-    String role;
+
+    @NotBlank
+    private String login;
+
+    @NotBlank
+    private String senha;
+    
+    private String role;
 }
