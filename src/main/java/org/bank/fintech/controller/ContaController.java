@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.*;
 
 
 
@@ -54,7 +55,7 @@ public class ContaController {
             Conta novaConta = new Conta();
             novaConta.setTitular(dados.getTitular());
             novaConta.setCpf(dados.getCpf());
-            novaConta.setDataDeNascimento(dados.getDataNascimento());
+            novaConta.setDataDeNascimento(dados.getDataDeNascimento());
 
             Conta contaCriada = service.criar(novaConta,dados.getValorInicial());
 
