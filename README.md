@@ -62,7 +62,7 @@ A aplicação é **Dockerizada**. Isso significa que você não precisa instalar
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU-USUARIO/fintech-api.git](https://github.com/SEU-USUARIO/fintech-api.git)
+    git clone [https://github.com/Joaovirone/fintech-api.git](https://github.com/Joaovirone/fintech-api.git)
     cd fintech-api
     ```
 
@@ -173,7 +173,7 @@ Vamos simular uma transferência entre contas. (Crie um segundo usuário "Maria"
 
 ---
 
-## 🗄️ Estrutura do Banco de Dados
+### 🗄️ Estrutura do Banco de Dados
 
 O banco é gerenciado automaticamente pelo **Flyway**. As tabelas principais são:
 
