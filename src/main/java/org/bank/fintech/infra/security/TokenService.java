@@ -17,7 +17,7 @@ import java.time.ZoneOffset;
 public class TokenService {
     
 
-    private String secret = "gostoso123";
+    private String secret = "admin";
 
     public String gerarToken(Usuario usuario){
 
