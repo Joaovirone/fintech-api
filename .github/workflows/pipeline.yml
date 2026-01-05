@@ -3,9 +3,9 @@ name: Pipeline CI - Sistema Bancario
 # 1. QUANDO rodar? (Gatilhos)
 on:
   push:
-    branches: [ "main" ] # Roda quando envia código para a main
+    branches: [ "master" ] # Roda quando envia código para a main
   pull_request:
-    branches: [ "main" ] # Roda quando alguém abre um PR para a main
+    branches: [ "master" ] # Roda quando alguém abre um PR para a main
 
 # 2. O QUE rodar? (Trabalhos)
 jobs:
