@@ -1,28 +1,31 @@
-name: Pipeline CI - Sistema Bancário JAVA beta
+name: Pipeline CI - Sistema Bancario
 
+# 1. QUANDO rodar? (Gatilhos)
+on:
+  push:
+    branches: [ "main" ] # Roda quando envia código para a main
+  pull_request:
+    branches: [ "main" ] # Roda quando alguém abre um PR para a main
 
-on: 
-    push:
-        branches: ["main"]
-    pull_request:
-        branches: ["main"]
-
+# 2. O QUE rodar? (Trabalhos)
 jobs:
-    build-e-testes:
-        runs-on: ubuntu-latest
+  build-e-testes:
+    runs-on: ubuntu-latest # O computador que o GitHub empresta
 
-        steps:
+    steps:
+    # Passo A: Baixar o código do repositório
+    - name: Checkout do código
+      uses: actions/checkout@v3
 
-        - name: checkout do código
-          uses: actions/checkout@v3
-    
-        - name: configurando JDK 21
-          uses: actions/setup-java@v3
-          with:
-            java-version: '21'
-            distribution: 'temurin'
-            cache: maven
-            
-        - name: build e testes com o Maven
-          run: mvn clean verify 
-        
+    # Passo B: Instalar o Java 17 (Ajuste se usar o 21)
+    - name: Configurar JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven # Importante: Deixa o build mais rápido nas próximas vezes
+
+    # Passo C: Compilar e Rodar Testes
+    # O comando 'verify' do Maven roda testes unitários e empacota o JAR
+    - name: Build e Testes com Maven
+      run: mvn clean verify
