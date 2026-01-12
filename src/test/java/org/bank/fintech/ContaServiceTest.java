@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
     public class ContaServiceTest {
@@ -27,6 +30,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
     
     @InjectMocks
     private ContaService service;
+
+
+    @Test
+    public void autenticarContaTeste(){
+        
+        Authentication authMock = Mockito.mock(Authentication.class);
+        
+        SecurityContext securityContextMock = Mockito.mock(SecurityContext.class);
+
+        Mockito.when(authMock.getPrincipal()).thenReturn("usuario_teste");
+
+        Mockito.when(securityContextMock.getAuthentication()).thenReturn(authMock);
+
+        SecurityContextHolder.setContext(securityContextMock);
+
+    }
 
 
     @Test
