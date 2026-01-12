@@ -7,6 +7,7 @@ import org.bank.fintech.repository.ContaRepository;
 import org.bank.fintech.repository.TransacaoRepository;
 import org.bank.fintech.service.ContaService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,16 +33,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
     private ContaService service;
 
 
-    @Test
-    public void autenticarContaTeste(){
+    @BeforeEach
+    public void configurarSegurancaFake(){
         
         Authentication authMock = Mockito.mock(Authentication.class);
         
         SecurityContext securityContextMock = Mockito.mock(SecurityContext.class);
 
-        Mockito.when(authMock.getPrincipal()).thenReturn("usuario_teste");
+        Mockito.lenient().when(authMock.getPrincipal()).thenReturn("usuario_teste");
 
-        Mockito.when(securityContextMock.getAuthentication()).thenReturn(authMock);
+        Mockito.lenient().when(securityContextMock.getAuthentication()).thenReturn(authMock);
 
         SecurityContextHolder.setContext(securityContextMock);
 
