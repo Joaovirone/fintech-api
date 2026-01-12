@@ -43,9 +43,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
         Usuario usuarioFake = new Usuario();
         usuarioFake.setId(1L);
+        usuarioFake.setLogin("admin@admin.com");
+        usuarioFake.setSenha("admin");
         usuarioFake.setRole("admin");
 
-        Mockito.lenient().when(authMock.getPrincipal()).thenReturn("usuario_teste");
+        Mockito.lenient().when(authMock.getPrincipal()).thenReturn(usuarioFake);
 
         Mockito.lenient().when(securityContextMock.getAuthentication()).thenReturn(authMock);
 
