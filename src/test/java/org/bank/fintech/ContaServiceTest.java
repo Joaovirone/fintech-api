@@ -3,6 +3,7 @@ package org.bank.fintech;
 import java.util.Optional;
 
 import org.bank.fintech.model.Conta;
+import org.bank.fintech.model.Usuario;
 import org.bank.fintech.repository.ContaRepository;
 import org.bank.fintech.repository.TransacaoRepository;
 import org.bank.fintech.service.ContaService;
@@ -39,6 +40,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
         Authentication authMock = Mockito.mock(Authentication.class);
         
         SecurityContext securityContextMock = Mockito.mock(SecurityContext.class);
+
+        Usuario usuarioFake = new Usuario();
+        usuarioFake.setId(1L);
+        usuarioFake.setRole("admin");
 
         Mockito.lenient().when(authMock.getPrincipal()).thenReturn("usuario_teste");
 
