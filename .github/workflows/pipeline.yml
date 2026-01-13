@@ -48,4 +48,5 @@ jobs:
           context: .
           push: true
           # IMPORTANTE: Troque 'seu-usuario' pelo seu User real do Docker Hub
-          tags: joaovirone/fintech-api:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/fintech-api:latest
+                ${{ secrets.DOCKER_USERNAME }}/fintech-api:${{ github.sha }}
