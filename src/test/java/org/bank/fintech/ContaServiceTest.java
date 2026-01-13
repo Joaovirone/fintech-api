@@ -33,6 +33,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
     @InjectMocks
     private ContaService service;
 
+    private Usuario usuarioFake;
+
 
     @BeforeEach
     public void configurarSegurancaFake(){
@@ -41,11 +43,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
         
         SecurityContext securityContextMock = Mockito.mock(SecurityContext.class);
 
-        Usuario usuarioFake = new Usuario();
+        usuarioFake = new Usuario();
         usuarioFake.setId(1L);
         usuarioFake.setLogin("admin@admin.com");
         usuarioFake.setSenha("admin");
-        usuarioFake.setRole("admin");
+        usuarioFake.setRole("ADMIN");
 
         Mockito.lenient().when(authMock.getPrincipal()).thenReturn(usuarioFake);
 
@@ -55,7 +57,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
     }
 
-
+    
     @Test
     public void deveDepositarComSucesso(){
 
@@ -64,6 +66,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
         Conta contaFake = new Conta();
         contaFake.setSaldo(100.00);
         contaFake.setAtivo(true);
+        contaFake.setUsuario(usuarioFake);
 
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(contaFake));
 
@@ -97,11 +100,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
         origem.setId(1L);
         origem.setSaldo(100.00);
         origem.setAtivo(true);
+        origem.setUsuario(usuarioFake);
 
         Conta destino = new Conta();
         destino.setId(2L);
         destino.setSaldo(20.00);
         destino.setAtivo(true);
+        
 
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(origem));
         Mockito.when(repository.findById(2L)).thenReturn(Optional.of(destino));
@@ -117,13 +122,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
     }
 
     @Test
-    public void naoDeveTransferirComSucesso (){
+    public void naoDeveTransferirValorZero (){
 
         Conta origem = new Conta();
 
         origem.setId(1L);
         origem.setSaldo(100.00);
         origem.setAtivo(true);
+        origem.setUsuario(usuarioFake);
 
         Conta destino = new Conta();
 
@@ -131,18 +137,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
         destino.setSaldo(20.00);
         destino.setAtivo(true);
 
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(origem));
-        Mockito.when(repository.findById(2L)).thenReturn(Optional.of(destino));
+        Assertions.assertThrows(RuntimeException.class, () ->{
+            service.transferir(1L,2L, 0.00 );
+        });
 
-        service.transferir(1L , 2L , 0.00);
+        Assertions.assertEquals(100.00, origem.getSaldo());
 
-        Assertions.assertEquals(50.00, origem.getSaldo());
+        Assertions.assertEquals(20.00, destino.getSaldo());
 
-        Assertions.assertEquals(70.00, destino.getSaldo());
-
-        Mockito.verify(repository, Mockito.times(1)).save(origem);
-        Mockito.verify(repository, Mockito.times(1)).save(destino);
+        Mockito.verify(repository, Mockito.never()).save(origem);
+       
     }
     
 
-}
+} 
