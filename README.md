@@ -1,10 +1,10 @@
-# 🏦 Fintech API - Sistema Bancário Completo
+#  Fintech API - Sistema Bancário Completo
 
 API RESTful robusta desenvolvida para simular operações bancárias reais. O projeto foca em **Arquitetura Limpa**, **Segurança (JWT)** e **Conteinerização**. O diferencial deste sistema é a implementação completa de **RBAC (Role-Based Access Control)**, onde administradores possuem privilégios elevados sobre a gestão de contas.
 
 ---
 
-## 📋 Índice
+##  Índice
 
 1. [Visão Geral e Arquitetura](#-visão-geral-e-arquitetura)
 2. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
@@ -18,7 +18,7 @@ API RESTful robusta desenvolvida para simular operações bancárias reais. O pr
 
 ---
 
-## 🏛️ Visão Geral e Arquitetura
+##  Visão Geral e Arquitetura
 
 O sistema é dividido em camadas bem definidas para garantir a manutenção e escalabilidade:
 
@@ -38,7 +38,7 @@ O sistema é dividido em camadas bem definidas para garantir a manutenção e es
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 * **Linguagem:** Java 21 (LTS)
 * **Framework:** Spring Boot 3.3.5
@@ -51,7 +51,7 @@ O sistema é dividido em camadas bem definidas para garantir a manutenção e es
 
 ---
 
-## 🐳 Instalação e Execução (Passo a Passo)
+##  Instalação e Execução (Passo a Passo)
 
 A aplicação é **Dockerizada**. Isso significa que você não precisa instalar Java ou Postgres na sua máquina, apenas o Docker.
 
@@ -78,11 +78,11 @@ A aplicação é **Dockerizada**. Isso significa que você não precisa instalar
 
 ---
 
-## 📚 Documentação Interativa (Swagger)
+##  Documentação Interativa (Swagger)
 
 Com a aplicação rodando, você pode testar todos os endpoints sem precisar de Postman ou Insomnia.
 
-👉 **Acesse:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+ **Acesse:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 **Como Autenticar no Swagger:**
 1.  Faça Login no endpoint `/auth/login`.
@@ -92,7 +92,7 @@ Com a aplicação rodando, você pode testar todos os endpoints sem precisar de 
 
 ---
 
-## 🧪 Guia de Uso (Exemplos Práticos)
+##  Guia de Uso (Exemplos Práticos)
 
 Aqui estão os roteiros para testar as funcionalidades do sistema.
 
@@ -113,7 +113,7 @@ Aqui estão os roteiros para testar as funcionalidades do sistema.
 **B. Logar como Admin**
 * **Endpoint:** `POST /auth/login`
 * **Payload:** `{"login": "chefe", "senha": "123"}`
-* ⚠️ **Ação:** Copie o Token e autorize no Swagger.
+*  **Ação:** Copie o Token e autorize no Swagger.
 
 **C. Listar Todas as Contas (Exclusivo Admin)**
 * **Endpoint:** `GET /contas`
@@ -137,7 +137,7 @@ Aqui estão os roteiros para testar as funcionalidades do sistema.
 
 **B. Logar**
 * **Endpoint:** `POST /auth/login` com os dados acima.
-* ⚠️ **Ação:** Faça **Logout** do Admin no Swagger e coloque o Token do João.
+*  **Ação:** Faça **Logout** do Admin no Swagger e coloque o Token do João.
 
 **C. Criar Conta Bancária**
 * **Endpoint:** `POST /contas`
@@ -173,7 +173,7 @@ Vamos simular uma transferência entre contas. (Crie um segundo usuário "Maria"
 
 ---
 
-### 🗄️ Estrutura do Banco de Dados
+###  Estrutura do Banco de Dados
 
 O banco é gerenciado automaticamente pelo **Flyway**. As tabelas principais são:
 
@@ -185,7 +185,7 @@ O banco é gerenciado automaticamente pelo **Flyway**. As tabelas principais sã
 
 ---
 
-## 🤝 Contribuição
+##  Contribuição
 
 Projeto desenvolvido para fins educacionais. Sinta-se à vontade para fazer um fork e enviar Pull Requests com melhorias!
 
