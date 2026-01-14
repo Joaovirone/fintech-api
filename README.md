@@ -87,8 +87,8 @@ Com a aplicação rodando, você pode testar todos os endpoints sem precisar de 
 **Como Autenticar no Swagger:**
 1.  Faça Login no endpoint `/auth/login`.
 2.  Copie o token gerado (string longa).
-3.  Clique no botão **Authorize 🔓** no topo da página.
-4.  Cole o token e confirme. Agora o cadeado ficará fechado 🔒.
+3.  Clique no botão **Authorize ** no topo da página.
+4.  Cole o token e confirme. Agora o cadeado ficará fechado .
 
 ---
 
@@ -190,4 +190,4 @@ O banco é gerenciado automaticamente pelo **Flyway**. As tabelas principais sã
 Projeto desenvolvido para fins educacionais. Sinta-se à vontade para fazer um fork e enviar Pull Requests com melhorias!
 
 ---
-Desenvolvido com ☕(Java) e Spring Boot.
+Desenvolvido com Java e Spring Boot.
