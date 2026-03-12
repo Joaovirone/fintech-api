@@ -1,0 +1,42 @@
+spring:
+
+    jackson:
+        time-zone: Ameriza/Sao_Paulo
+
+    main:
+        allow-bean-definition-overriding: true
+
+    application:
+        name: Joaovirone-Fintech
+
+    datasource:
+        url: ${}
+        username: ${}
+        password: ${}
+        driver-class-name: ${}
+
+    flyway:
+        enabled: true
+        user: ${}
+        password: ${}
+        locations: classpath:/db/migration
+        baseline-on-migrate: true
+
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        
+        show-sql: true
+        
+        properties:
+            hibernate: 
+                format_sql: true
+            
+            open-in-view: false
+
+jwt:
+    secret: ${}
+
+server:
+  port: xxxx
+
